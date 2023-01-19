@@ -2,7 +2,7 @@ package org.vaadin.example;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 
-@Route("/DZBS") //ESTO ES LA RUTA DE 8080/DZBS PARA VER EL FRONT
+@Route("/datostwitter") //ESTO ES LA RUTA DE 8080/DZBS PARA VER EL FRONT
 public class MainView extends VerticalLayout {
     VerticalLayout contenedor = new VerticalLayout(); //Creamos un contenedor vertical
     //  VerticalLayout contenedor60 = new VerticalLayout(); //Creamos un contenedor vertical

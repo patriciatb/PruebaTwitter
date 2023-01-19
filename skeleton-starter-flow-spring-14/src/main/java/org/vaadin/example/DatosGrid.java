@@ -54,7 +54,7 @@ public class DatosGrid extends VerticalLayout {
         vistainicio.setHighlightCondition(HighlightConditions.sameLocation()); // Para que se resalte el enlace cuando estemos en la vista de DatosGrid
 
         //Botón para volver a la página principal
-        VerticalLayout dialogLayout = crearZonaBasica(formulario); // Creamos un layout vertical para el dialogo
+        VerticalLayout dialogLayout = crearTw(formulario); // Creamos un layout vertical para el dialogo
         formulario.add(dialogLayout); // Añadimos el layout al dialogo
 
         Button addUser = new Button("Crear un nuevo tweet", e -> formulario.open()); // Creamos un boton para abrir el dialogo
@@ -84,14 +84,14 @@ public class DatosGrid extends VerticalLayout {
                 DatosTwitter datos = selection.getFirstSelectedItem().get(); // Creamos una variable para los datos de la zona de salud
                 Dialog formularioEditar = new Dialog(); // Creamos un dialogo para el formulario
                 formularioEditar.getElement().setAttribute("aria-label", "Editar usuario"); // Le ponemos un nombre al dialogo
-                VerticalLayout dialogLayoutEditar = editarZonabasica(formularioEditar, datos); // Creamos un layout vertical para el dialogo
+                VerticalLayout dialogLayoutEditar = editarTw(formularioEditar, datos); // Creamos un layout vertical para el dialogo
                 formularioEditar.add(dialogLayoutEditar); // Añadimos el layout al dialogo
                 formularioEditar.open(); // Abrimos el dialogo
             });
             eliminar.setEnabled(size != 0); // Activamos el boton de eliminar
             eliminar.addClickListener(listener -> { // Añadimos un listener al boton de eliminar
                 DatosTwitter datos = selection.getFirstSelectedItem().get(); // Creamos una variable para los datos de la zona de salud
-                eliminarZonaBasica(datos); // Llamamos al metodo para eliminar la zona de salud
+                eliminarTw(datos); // Llamamos al metodo para eliminar la zona de salud
             });
         });
 
@@ -105,11 +105,11 @@ public class DatosGrid extends VerticalLayout {
         updategrid(); // Actualizamos el grid
     }
 
-    private void eliminarZonaBasica(DatosTwitter datos) { // Metodo para eliminar una zona de salud
+    private void eliminarTw(DatosTwitter datos) { // Metodo para eliminar una zona de salud
         String codigo = datos.getId();
         URL url; // Creamos una variable para la url
         URLConnection con; // Creamos una variable para la conexion
-        Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create(); // Creamos una variable para el gson
+        Gson gson = new GsonBuilder().setDateFormat("dd-MM-yyyy").create(); // Creamos una variable para el gson
         int tamanio = codigo.length(); // Creamos una variable para el tamaño del json
         // Crear nuevo archivo json y sobreescribir el anterior
 
@@ -141,17 +141,14 @@ public class DatosGrid extends VerticalLayout {
         // Actualizar la pagina
     }
 
-    private VerticalLayout crearZonaBasica(Dialog dialog) {
+    private VerticalLayout crearTw(Dialog dialog) {
         H2 titulo = new H2("Crear nueva Zona básica de Salud"); // Creamos un titulo para el formulario
 
+        DatePick fechapick = new DatePick(); // Creamos un objeto de la clase DatePick
         //TextField codigo = new TextField("Código geometría: "); // Creamos un campo de texto para el codigo de la geometria
-        TextField zona = new TextField("Zona báisca de salud: "); // Creamos un campo de texto para el nombre de la zona de salud
-        TextField incidencia14 = new TextField("Tasa de incidencia acumulada en los últimos 14 días: "); // Creamos un campo de texto para la incidencia de los ultimos 14 dias
-        TextField incidenciaT = new TextField("Tasa de incidencia acumulada total: "); // Creamos un campo de texto para la incidencia total
-        TextField casosT = new TextField("Casos confirmados totales: "); // Creamos un campo de texto para los casos totales
-        TextField casos14 = new TextField("Casos confirmados últimos 14 días: "); // Creamos un campo de texto para los casos de los ultimos 14 dias
-        DatePick fechas = new DatePick(); // Creamos un campo de texto para la fecha del informe
-        VerticalLayout campos = new VerticalLayout(zona, incidencia14, incidenciaT, casosT, casos14, fechas); // Creamos un layout vertical para los campos de texto
+        TextField usuario = new TextField("usuario: "); // Creamos un campo de texto para el nombre de la zona de salud
+        TextField tweet = new TextField("tweet: "); // Creamos un campo de texto para la incidencia de los ultimos 14 dias
+        VerticalLayout campos = new VerticalLayout(usuario, tweet, fechapick); // Creamos un layout vertical para los campos de texto
 
         campos.setSpacing(false); // Quitamos el espacio entre los campos de texto
         campos.setPadding(false); // Quitamos el padding entre los campos de texto
@@ -177,30 +174,24 @@ public class DatosGrid extends VerticalLayout {
         VerticalLayout dialogLayout = new VerticalLayout(titulo, campos, botones); // Creamos un layout vertical para el dialogo
         dialogLayout.setPadding(false); // Quitamos el padding del layout
         dialogLayout.setAlignItems(Alignment.STRETCH); // Alineamos los elementos del layout
-        dialogLayout.getStyle().set("width", "600px").set("max-width", "100%"); // Le ponemos un estilo al layout
+        dialogLayout.getStyle().set("width", "300px").set("max-width", "100%"); // Le ponemos un estilo al layout
 
         guardar.addClickListener(e -> {
-            DatosTwitter zonaBasica = new DatosTwitter(); // Creamos un objeto de tipo zona basica de salud
-            zonaBasica.setId(zona.getValue()); // Le ponemos el valor del campo de texto al objeto
+            DatosTwitter tw = new DatosTwitter(); // Creamos un tweet
+            tw.setUsuario(usuario.getValue()); // Le ponemos el valor del campo de texto al objeto
             //Asigna el valor de la incideia de los ultimos 14 dias convirtiendolo a float
-            zonaBasica.setUsuario(Float.parseFloat(incidencia14.getValue()));
-            //Asigna el valor de la incideia total convirtiendolo a float
-            zonaBasica.setTweet(Float.parseFloat(incidenciaT.getValue()));
-            //Asigna el valor de los casos totales convirtiendolo a int
-            zonaBasica.setFecha(Integer.parseInt(casosT.getValue()));
-            //Asigna el valor de los casos de los ultimos 14 dias convirtiendolo a int
+            tw.setTweet(tweet.getValue());
 
-            System.out.println(fechas.getfechaHora());
-            String fecha = fechas.getfechaHora();
+            String fecha = fechapick.getFechaEnvio(); // Creamos una variable para la fecha
             System.out.println("This " + fecha);
             Date fechaHora = new Date(fecha);
-            zonaBasica.setFecha(fechaHora); // Le ponemos el valor del campo de texto al objeto
+            tw.setFecha(fechaHora); // Le ponemos el valor del campo de texto al objeto
 
 
             URL url; // Creamos una variable para la url
             URLConnection con; // Creamos una variable para la conexion
-            Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create();; // Creamos una variable para el gson
-            String json = gson.toJson(zonaBasica); // Creamos una variable para el json
+            Gson gson = new GsonBuilder().setDateFormat("dd-MM-yyyy").create();; // Creamos una variable para el gson
+            String json = gson.toJson(tw); // Creamos una variable para el json
             System.out.println(json); // Imprimimos el json por consola
             int tamanio = json.length(); // Creamos una variable para el tamaño del json
 
@@ -231,17 +222,14 @@ public class DatosGrid extends VerticalLayout {
         return dialogLayout; // Devolvemos el layout
     }
 
-    private VerticalLayout editarZonabasica(Dialog formularioEditar, DatosTwitter zona) {
-        H2 titulo = new H2("Editar Zona básica de Salud"); // Creamos un titulo para el formulario
+    private VerticalLayout editarTw(Dialog formularioEditar, DatosTwitter tw) {
+        H2 titulo = new H2("Editar tweets"); // Creamos un titulo para el formulario
 
-        TextField codigo = new TextField("Código geometría: "); // Creamos un campo de texto para el codigo de la geometria
-        TextField zonaS = new TextField("Zona báisca de salud: "); // Creamos un campo de texto para el nombre de la zona de salud
-        TextField incidencia14 = new TextField("Tasa de incidencia acumulada en los últimos 14 días: "); // Creamos un campo de texto para la incidencia de los ultimos 14 dias
-        TextField incidenciaT = new TextField("Tasa de incidencia acumulada total: "); // Creamos un campo de texto para la incidencia total
-        TextField casosT = new TextField("Casos confirmados totales: "); // Creamos un campo de texto para los casos totales
-        TextField casos14 = new TextField("Casos confirmados últimos 14 días: "); // Creamos un campo de texto para los casos de los ultimos 14 dias
+        TextField id = new TextField("id: "); // Creamos un campo de texto para el codigo de la geometria
+        TextField usuario = new TextField("usuario: "); // Creamos un campo de texto para el nombre de la zona de salud
+        TextField tweet = new TextField("tweet: "); // Creamos un campo de texto para la incidencia de los ultimos 14 dias
         //DatePick fecha = new DatePick(); // Creamos un campo de texto para la fecha del informe
-        VerticalLayout campos = new VerticalLayout(codigo, zonaS, incidencia14, incidenciaT, casosT, casos14); // Creamos un layout vertical para los campos de texto
+        VerticalLayout campos = new VerticalLayout(id, usuario, tweet); // Creamos un layout vertical para los campos de texto
 
         campos.setSpacing(false); // Quitamos el espacio entre los campos de texto
         campos.setPadding(false); // Quitamos el padding entre los campos de texto
@@ -263,21 +251,12 @@ public class DatosGrid extends VerticalLayout {
         HorizontalLayout botones = new HorizontalLayout(cancelar, guardar); // Creamos un layout horizontal para los botones de cancelar y guardar
         botones.setJustifyContentMode(JustifyContentMode.END); // alineos los botones a la derecha
         
-        codigo.setValue(zona.getCodigo_geometria()); // Asignamos el valor del codigo de la geometria
-        codigo.setEnabled(false); // Desactivamos el campo de texto
-        zonaS.setValue(zona.getZona_basica_salud()); // Asignamos el valor del nombre de la zona de salud
-        if (zona.getTasa_incidencia_acumulada_ultimos_14dias() == null) { // Si la incidencia de los ultimos 14 dias es null
-            incidencia14.setValue("0"); // Asignamos el valor 0
-        } else {
-            incidencia14.setValue(zona.getTasa_incidencia_acumulada_ultimos_14dias().toString()); // Asignamos el valor de la incidencia de los ultimos 14 dias
-        }
-        incidenciaT.setValue(zona.getTasa_incidencia_acumulada_total().toString()); // Asignamos el valor de la incidencia total
-        casosT.setValue(zona.getCasos_confirmados_totales().toString()); // Asignamos el valor de los casos totales
-        if (zona.getCasos_confirmados_ultimos_14dias() == null) { // Si los casos de los ultimos 14 dias es null
-            casos14.setValue("0"); // Asignamos el valor 0
-        } else {
-            casos14.setValue(zona.getCasos_confirmados_ultimos_14dias().toString()); // Asignamos el valor de los casos de los ultimos 14 dias
-        }
+        id.setValue(tw.getId()); // Asignamos el valor del codigo de la geometria
+        id.setEnabled(false); // Desactivamos el campo de texto
+        usuario.setValue(tw.getUsuario()); // Asignamos el valor del nombre de la zona de salud
+
+        tweet.setValue(tw.getTweet().toString()); // Asignamos el valor de la incidencia total
+
 
         VerticalLayout dialogLayout = new VerticalLayout(titulo, campos, botones); // Creamos un layout vertical para el dialogo
         dialogLayout.setPadding(false); // Quitamos el padding del layout
@@ -286,23 +265,20 @@ public class DatosGrid extends VerticalLayout {
 
         guardar.addClickListener(e -> {
 
-            DatosTwitter zonaBasica = new DatosTwitter(); // Creamos un objeto de tipo zona basica de salud
-            zonaBasica.setCodigo_geometria(codigo.getValue()); // Le ponemos el valor del campo de texto al objeto
-
-            zonaBasica.setZona_basica_salud(zonaS.getValue()); // Le ponemos el valor del campo de texto al objeto
+            DatosTwitter dtwitter = new DatosTwitter(); // Creamos un objeto de tipo zona basica de salud
+            dtwitter.setId(id.getValue()); // Le ponemos el valor del campo de texto al objeto
+            dtwitter.setUsuario(usuario.getValue()); // Le ponemos el valor del campo de texto al objeto
             //Asigna el valor de la incideia de los ultimos 14 dias convirtiendolo a float
-            zonaBasica.setTasa_incidencia_acumulada_ultimos_14dias(Float.parseFloat(incidencia14.getValue()));
-            //Asigna el valor de la incideia total convirtiendolo a float
-            zonaBasica.setTasa_incidencia_acumulada_total(Float.parseFloat(incidenciaT.getValue()));
+            dtwitter.setTweet(tweet.getValue()); //(Float.parseFloat(incidencia14.getValue()));
+
             //Asigna el valor de los casos totales convirtiendolo a int
-            zonaBasica.setCasos_confirmados_totales(Integer.parseInt(casosT.getValue()));
-            //Asigna el valor de los casos de los ultimos 14 dias convirtiendolo a int
-            zonaBasica.setCasos_confirmados_ultimos_14dias(Integer.parseInt(casos14.getValue()));
+          //  dtwitter.setCasos_confirmados_totales(Integer.parseInt(casosT.getValue()));
+
 
             URL url; // Creamos un objeto de tipo URL
             URLConnection con; // Creamos un objeto de tipo URLConnection
-            Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create(); // Creamos un objeto de tipo Gson
-            String json = gson.toJson(zonaBasica); // Creamos un objeto de tipo String y le asignamos el objeto de tipo Gson convertido a json
+            Gson gson = new GsonBuilder().setDateFormat("dd-MM-yyyy").create(); // Creamos un objeto de tipo Gson
+            String json = gson.toJson(dtwitter); // Creamos un objeto de tipo String y le asignamos el objeto de tipo Gson convertido a json
             int tamanio = json.length(); // Creamos un objeto de tipo int y le asignamos el tamaño del objeto de tipo String
 
             try {
@@ -334,7 +310,7 @@ public class DatosGrid extends VerticalLayout {
     public void updategrid(){
         URL url; // Creamos una variable para la URL
         URLConnection con; // Creamos una variable para la conexion
-        Gson gson = new GsonBuilder().setDateFormat("dd/MM/yyyy").create(); // Creamos una variable para la libreria Gson
+        Gson gson = new GsonBuilder().setDateFormat("dd-MM-yyyy").create(); // Creamos una variable para la libreria Gson
         String respuesta = ""; // Creamos una variable para la respuesta del servidor
         try{
             url = new URL("http://localhost:8090/ptbtwitter"); //URL del servidor con el puerto

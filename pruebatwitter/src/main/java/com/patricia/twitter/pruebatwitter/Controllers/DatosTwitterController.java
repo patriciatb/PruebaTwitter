@@ -28,7 +28,7 @@ public class DatosTwitterController {
 
     // ESTO ES PARA HACER POST es un insertar
     @PostMapping(path) //creamos un nuevo usuario
-    public String crearZona(@RequestBody DatosTwitter dz) { //dz es un array list auxiliar
+    public String crear(@RequestBody DatosTwitter dz) { //dz es un array list auxiliar
         DBtwitterManager dbmgr = new DBtwitterManager(); //  creo un objeto de la clase DBtwitterManger
         db = dbmgr.readDB(); // leo la base de datos
         try {
@@ -82,11 +82,28 @@ public class DatosTwitterController {
                 System.out.println("El dato que se va a eliminar es: " + db.getDatos().get(i).getFecha());
                 db.getDatos().remove(i); // elimino el dato con ese id
                 dbmgr.saveDB(db); // guardo la base de datos
-                break;
+                return "eliminado CORRECTAMENTE!!";
             }
         }
         return "Error! \n Zona básica con código geometría " + id + " no existe.";
     }
-
+    // EDITAAAAAAAAR PUT
+    @PutMapping(path)
+    public String Actualizar(@RequestBody DatosTwitter dz){ // actualizamos
+        DBtwitterManager dbmgr = new DBtwitterManager(); // creo un objeto de la clase DBManager
+        db = dbmgr.readDB(); // leo la base de datos
+        for (int i=0; i<db.getDatos().size(); i++){ // recorro todos los datos
+            System.out.println("El id que recibe es: " + dz.getId());
+            System.out.println("El id de la base de datos es: " + db.getDatos().get(i).getId());
+            if (db.getDatos().get(i).getId().equals(dz.getId())){ // comparo el dato de la lista con el seleccionado
+                db.getDatos().get(i).setId(dz.getId()); // actualizo el dato
+                db.getDatos().get(i).setUsuario(dz.getUsuario()); // actualizo el dato
+                db.getDatos().get(i).setTweet(dz.getTweet()); // actualizo el dato
+               dbmgr.saveDB(db); // guardo la informacion
+                return "Zona básica con código geometía " + dz.getId()+ " actualizado correctamente.";
+            }
+        }
+        return "Error! \n Zona básica con código geometría " + dz.getId()+ " no existe.";
+    }
 }
 
