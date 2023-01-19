@@ -1,0 +1,58 @@
+{
+  "tweets": [
+    {
+      "id": 1,
+      "usuario": "Pedro",
+      "tweet": "Mi primer tweet en la nueva app",
+      "fecha": "20-02-2022"
+    },
+    {
+      "id": 2,
+      "usuario": "Pedro",
+      "tweet": "Mi segundo tweet en la nueva app",
+      "fecha": "24-02-2022"
+    },
+    {
+      "id": 3,
+      "usuario": "Pedro",
+      "tweet": "Mi tercer tweet en la nueva app",
+      "fecha": "28-02-2022"
+    },
+    {
+      "id": 4,
+      "usuario": "Pedro",
+      "tweet": "Mi cuarto tweet en la nueva app",
+      "fecha": "20-03-2022"
+    },
+    {
+      "id": 5,
+      "usuario": "Pedro",
+      "tweet": "Mi quinto tweet en la nueva app",
+      "fecha": "22-03-2022"
+    },
+    {
+      "id": 6,
+      "usuario": "Pedro",
+      "tweet": "Mi sexto tweet en la nueva app",
+      "fecha": "22-04-2022"
+    },
+    {
+      "id": 7,
+      "usuario": "Jorge",
+      "tweet": "Hola profesores",
+      "fecha": "25-04-2022"
+    },
+    {
+      "id": 7,
+      "usuario": "Jorge",
+      "tweet": "Esta aplicación es muy buena",
+      "fecha": "25-04-2022"
+    },
+    {
+      "id": 7,
+      "usuario": "Pedro",
+      "tweet": "Mi séptimo tweet en la nueva app",
+      "fecha": "25-04-2022"
+    }
+  ]
+}
